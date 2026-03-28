@@ -151,7 +151,7 @@ class TodoPanelIndicator extends PanelMenu.Button {
     }
 
     _helperCommand(...args) {
-        return ['run', `--command=todogui-panel`, APP_ID, ...args];
+        return ['run', `--command=gnome-todo-panel`, APP_ID, ...args];
     }
 
     _handleMenuOpened() {
