@@ -4,20 +4,33 @@ Contributions are welcome! Here's how to get started.
 
 Project policy: target GNOME on Wayland only. Do not add or document X11 session support.
 
-## Prerequisites
+## Getting started (Ubuntu)
 
-- `flatpak`
-- `flatpak-builder`
+Clone the repository and run the one-time setup script:
 
-See the [README](README.md#requirements-for-building) for installation
-instructions per distribution.
+```bash
+git clone --recurse-submodules https://github.com/esatbayhan/ttd-gnome.git
+cd gnome-todo
+./setup-dev.sh
+```
+
+This installs all system packages, the Python toolchain, Flatpak runtimes, and
+configures git hooks. Safe to re-run — already-satisfied steps are skipped.
+
+Then do a fast local build to verify everything works:
+
+```bash
+./dev-install.sh
+```
 
 ## Building
 
-Clone the repository and run the combined installer:
+### First install / release build
+
+Clone the repository (including the `ttd-core` submodule) and run the combined installer:
 
 ```bash
-git clone https://github.com/esatbayhan/gnome-todo.git
+git clone --recurse-submodules https://github.com/esatbayhan/gnome-todo.git
 cd gnome-todo
 ./install.sh
 ```
@@ -25,15 +38,53 @@ cd gnome-todo
 This installs the GNOME SDK/runtime if needed, builds the app, installs it as a
 user Flatpak, and installs/enables the GNOME Shell extension.
 
-For app-only rebuilds, use `./install-flatpak.sh`.
 For extension-only updates, use `./install-extension.sh`.
 For faster extension iterations without logging out each time, use
-`./install-extension.sh --reload` and watch errors with `./watch-extension.sh`.
+`./install-extension.sh --reload`.
+
+### Development build (fast, local)
+
+For day-to-day development use the local meson build instead of Flatpak.
+It uses Cargo's incremental compilation, so only changed Rust code is
+recompiled on subsequent runs.
+
+Additional prerequisites:
+
+```bash
+# Debian/Ubuntu
+sudo apt install meson ninja-build
+# Fedora
+sudo dnf install meson ninja-build
+```
+
+Then build and install into the project tree:
+
+```bash
+./dev-install.sh
+```
+
+Artifacts land in `builddir/_install/` — nothing is written outside the project.
+The launcher at `builddir/src/gnome-todo` is picked up automatically by the
+screenshot generator and the pre-commit hook.
+
+To wipe and reconfigure from scratch:
+
+```bash
+./dev-install.sh --reconfigure
+```
 
 ## Running tests
 
+Run the full CI check (lint, format, tests) with:
+
 ```bash
-PYTHONPATH=src python -m pytest tests/ -v
+./devtools/ci.sh
+```
+
+Or run pytest directly:
+
+```bash
+uv run pytest tests/ -v
 ```
 
 ## Code style

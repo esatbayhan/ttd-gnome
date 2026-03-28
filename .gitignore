@@ -18,7 +18,6 @@ htmlcov/
 build-dir/
 .flatpak-builder/
 
-# Local meson build (build-local.sh)
 builddir/
 
 # Cargo vendor directory (created by flatpak-builder; not committed)

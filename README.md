@@ -27,19 +27,13 @@ The recommended way to install is to install both the Flatpak app and the
 GNOME Shell extension together:
 
 ```bash
-git clone https://github.com/esatbayhan/gnome-todo.git
+git clone --recurse-submodules https://github.com/esatbayhan/gnome-todo.git
 cd gnome-todo
 ./install.sh
 ```
 
 This installs the GNOME SDK/runtime if needed, builds the app, installs it as a
 user Flatpak, and installs/enables the GNOME Shell extension.
-
-If you only want the app, run:
-
-```bash
-./install-flatpak.sh
-```
 
 If you only want to install or update the extension, run:
 
@@ -51,7 +45,6 @@ For quicker extension development iterations, run:
 
 ```bash
 ./install-extension.sh --reload
-./watch-extension.sh
 ```
 
 You can then launch the app from your application menu or via:
@@ -60,10 +53,10 @@ You can then launch the app from your application menu or via:
 flatpak run dev.bayhan.GnomeTodo
 ```
 
-For day-to-day local rebuilds, `./install-flatpak.sh` reinstalls the app from
-the current project sources while reusing cached dependency downloads. If you
-want to refresh pinned sources such as `blueprint-compiler`, run
-`./install-flatpak.sh --refresh-sources` or `./install.sh --refresh-sources`.
+For day-to-day local rebuilds, `./install.sh` reinstalls the app from the
+current project sources while reusing cached dependency downloads. If you want
+to refresh pinned sources such as `blueprint-compiler`, run
+`./install.sh --refresh-sources`.
 
 ### Requirements for building
 
@@ -131,8 +124,9 @@ contexts (`@context`), and `key:value` metadata.
 ```
 meson.build                 Root Meson build definition
 dev.bayhan.GnomeTodo.json   Flatpak manifest
-install-flatpak.sh          One-command Flatpak build & install script
-
+cargo-sources.json          Pinned Rust dependency sources for Flatpak
+install.sh                  Build & install Flatpak app + extension
+install-extension.sh        Install/reload the GNOME Shell extension
 data/
     dev.bayhan.GnomeTodo.desktop      Desktop entry
     dev.bayhan.GnomeTodo.metainfo.xml AppStream metadata
@@ -142,42 +136,51 @@ data/
 src/
     meson.build                       Compiles blueprints, bundles GResource,
                                       installs launcher and Python packages
-    todogui.in                        Launcher script template
+    gnome-todo.in                     Main launcher script template
+    gnome-todo-panel.in               Panel CLI launcher template
     dev.bayhan.GnomeTodo.gresource.xml
     style.css                         Custom styles
 
     ui/
         *.blp                         Blueprint UI definitions
 
-    todotxt_gui/
-        app.py              Application entry point and CSS loading
-        _window.py          Main window (sidebar, content, detail split view)
-        _content.py         Content header, task rows, task sections
-        _content_header.py  Content pane header with grouping menu
-        _detail_panel.py    Right-side task detail/edit panel
-        _dialogs.py         Add-task dialog with property pickers
-        _sidebar.py         Smart filter list and project/context lists
-        _task_row.py        Rich two-line task row widget
-        _widgets.py         Small reusable widget factories
-        _grouping.py        Task grouping logic
-        _config.py          Persistent JSON configuration
-        _core.py            File path resolution
-        _file_monitor.py    External file change detection
-        _preferences.py     Preferences dialog
-        _shortcuts.py       Keyboard shortcuts
-        _welcome.py         First-launch welcome dialog
-        _ui.py              GResource path constant
+    gnome_todo/
+        app.py                  Application entry point
+        _window.py              Main window (sidebar, content, detail split view)
+        _window_state.py        Window state persistence
+        _content.py             Content header, task rows, task sections
+        _content_header.py      Content pane header with grouping menu
+        _detail_panel.py        Right-side task detail/edit panel
+        _detail_panel_tags.py   Project/context chip rendering
+        _dialogs.py             Add-task dialog with property pickers
+        _sidebar.py             Smart filter list and project/context lists
+        _sidebar_state.py       Sidebar state dataclass
+        _task_row.py            Rich two-line task row widget
+        _task_row_state.py      Task row state management
+        _widgets.py             Small reusable widget factories
+        _config.py              Persistent JSON configuration
+        _core.py                File path resolution
+        _file_monitor.py        External file change detection
+        _preferences.py         Preferences dialog
+        _shortcuts.py           Keyboard shortcuts
+        _welcome.py             First-launch welcome dialog
+        _ui.py                  GResource path constant
+        panel_cli.py            Shell extension quick-add CLI
 
-    todotxt_lib/
-        parser.py           todo.txt line parser
-        task.py             Task data model
-        todo_directory.py   todo.txt.d storage and mutation engine
-        operations.py       Task manipulation helpers
-        env.py              Environment variable resolution
+extensions/
+    gnome-todo-shell-ext@dev.bayhan/
+        metadata.json           Extension manifest
+        extension.js            Extension logic
+        stylesheet.css          Extension styles
+
+vendor/
+    ttd-core/                   Rust core library (git submodule)
+        src/                    Rust implementation
+        bindings/python/        Generated Python FFI bindings (ttd_core package)
 
 tests/
-    lib/                    Unit tests for todotxt_lib
-    gui/                    Unit tests for todotxt_gui
+    lib/                    Unit tests for the ttd_core library
+    gui/                    Unit tests for gnome_todo
 ```
 
 ## Design principles

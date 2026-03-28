@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Pre-push hook: verify the full Flatpak build succeeds before pushing.
+# This is slower than the pre-commit check but catches Flatpak-specific
+# packaging issues before they reach the remote.
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+
+echo "Verifying Flatpak build (this may take a while)..."
+"$REPO_ROOT/install.sh" || {
+    echo "" >&2
+    echo "Error: Flatpak build failed — push blocked." >&2
+    exit 1
+}
+
+exit 0

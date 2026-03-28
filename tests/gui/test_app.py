@@ -15,7 +15,7 @@ from gnome_todo._core import has_configured_dir, sort_key, todo_dir_path
 
 class TestVersionMetadata(unittest.TestCase):
     def test_runtime_version_matches_release(self) -> None:
-        self.assertEqual(__version__, "0.4.0")
+        self.assertEqual(__version__, "0.4.1")
 
 
 class TestDirectoryPaths(unittest.TestCase):

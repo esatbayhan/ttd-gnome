@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-# Pre-commit hook: run CI checks, then regenerate README screenshots.
+# Pre-commit hook: lint/test, local build check, then regenerate README screenshots.
 #
-# CI checks (lint, format, tests) must all pass — the commit is blocked on failure.
-# Screenshot generation is best-effort and never blocks the commit.
-#
-# Installed automatically by build-local.sh via: git config core.hooksPath .githooks
+# All steps must pass — the commit is blocked on failure.
 
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 
@@ -12,11 +9,15 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 
 "$REPO_ROOT/devtools/ci.sh" || exit 1
 
-# ── Screenshots (best-effort) ─────────────────────────────────────────
+# ── Local build check (blocking) ─────────────────────────────────────
+
+echo "Checking local build..."
+"$REPO_ROOT/dev-install.sh" || exit 1
+
+# ── Screenshots (blocking) ────────────────────────────────────────────
 
 cd "$REPO_ROOT"
-if python3 devtools/generate_readme_screenshots.py 2>/dev/null; then
-    git add -- docs/screenshots/ 2>/dev/null || true
-fi
+python3 devtools/generate_readme_screenshots.py || exit 1
+git add -- docs/screenshots/
 
 exit 0

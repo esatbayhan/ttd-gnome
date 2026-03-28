@@ -36,6 +36,8 @@ from ttd_core import (
 from . import __version__
 from ._config import get_auto_normalize_multi_task_files, get_show_raw_text
 from ._content import TaskSection
+from ._content_header import ContentHeader
+from ._detail_panel import TaskDetailPanel
 from ._dialogs import AddTaskDialog, AddTaskResult
 from ._file_monitor import FileMonitor
 from ._preferences import PreferencesDialog
@@ -64,7 +66,7 @@ class TodoWindow(Adw.ApplicationWindow):
     project_list = Gtk.Template.Child()
     context_list = Gtk.Template.Child()
     detail_split = Gtk.Template.Child()
-    detail_panel = Gtk.Template.Child()
+    detail_panel: TaskDetailPanel = Gtk.Template.Child()
     show_sidebar_btn = Gtk.Template.Child()
     menu_btn = Gtk.Template.Child()
     search_btn = Gtk.Template.Child()
@@ -73,7 +75,7 @@ class TodoWindow(Adw.ApplicationWindow):
     content_stack = Gtk.Template.Child()
     status_page = Gtk.Template.Child()
     content_box = Gtk.Template.Child()
-    content_header = Gtk.Template.Child()
+    content_header: ContentHeader = Gtk.Template.Child()
     sections_box = Gtk.Template.Child()
 
     def __init__(

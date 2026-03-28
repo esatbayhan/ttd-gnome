@@ -16,6 +16,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_ID = "dev.bayhan.GnomeTodo"
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from devtools.screenshot import build_readme_screenshot_jobs  # noqa: E402

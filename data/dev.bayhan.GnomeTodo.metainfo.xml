@@ -54,6 +54,11 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.4.1" date="2026-03-28">
+      <description>
+        <p>Maintenance release with minor fixes and improvements.</p>
+      </description>
+    </release>
     <release version="0.3.0" date="2026-03-26">
       <description>
         <p>Changed the Todo.txt specification to todo.txt.d.</p>

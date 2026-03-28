@@ -5,9 +5,7 @@
 # Requires: uv — https://docs.astral.sh/uv/
 # Run manually at any time, or automatically via the pre-commit hook.
 #
-# First-time setup:
-#   ./build-local.sh   (runs uv sync automatically)
-#   # or manually: uv sync
+# First-time setup: uv sync
 
 set -uo pipefail
 

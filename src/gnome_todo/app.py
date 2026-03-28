@@ -54,6 +54,14 @@ class _TodoGuiApp(Adw.Application):
         self._exit_code = 0
 
     def do_activate(self) -> None:
+        try:
+            self._do_activate_inner()
+        except Exception as exc:
+            print(f"[app] fatal error during activation: {exc}", file=sys.stderr)
+            self._exit_code = 1
+            self.quit()
+
+    def _do_activate_inner(self) -> None:
         _load_css()
 
         if self._options.screenshot is not None and not has_configured_dir():
