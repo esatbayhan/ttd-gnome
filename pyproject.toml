@@ -1,0 +1,19 @@
+[project]
+name = "ttd-gnome"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = ["ruff>=0.4", "pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "vendor/ttd-core/bindings/python", "."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+exclude = ["vendor/"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501", "E402"]  # E402: gi.require_version() must precede gi.repository imports

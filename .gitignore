@@ -1,4 +1,5 @@
 # Python
+.venv/
 __pycache__/
 *.py[cod]
 *.pyo
@@ -16,6 +17,12 @@ htmlcov/
 # Flatpak build artifacts
 build-dir/
 .flatpak-builder/
+
+# Local meson build (build-local.sh)
+builddir/
+
+# Cargo vendor directory (created by flatpak-builder; not committed)
+cargo-vendor/
 
 # Editors
 .idea/

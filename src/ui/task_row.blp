@@ -1,0 +1,48 @@
+using Gtk 4.0;
+
+template $TaskRow: Gtk.ListBoxRow {
+  Gtk.Box {
+    orientation: horizontal;
+    spacing: 10;
+    margin-start: 2;
+    margin-end: 2;
+    margin-top: 1;
+    margin-bottom: 1;
+    styles ["task-row-box"]
+
+    Gtk.CheckButton check {
+      valign: center;
+    }
+
+    Gtk.Box content_box {
+      orientation: vertical;
+      spacing: 1;
+      hexpand: true;
+      valign: center;
+      styles ["task-row-content"]
+
+      Gtk.Label text_label {
+        xalign: 0.0;
+        hexpand: true;
+        wrap: true;
+        wrap-mode: word_char;
+        styles ["task-row-title"]
+      }
+
+      Gtk.Box meta_box {
+        orientation: horizontal;
+        spacing: 5;
+        visible: false;
+        styles ["task-row-meta"]
+      }
+    }
+
+    Gtk.Button delete_btn {
+      icon-name: "user-trash-symbolic";
+      tooltip-text: "Delete task";
+      valign: center;
+      clicked => $on_delete_clicked();
+      styles ["flat", "circular", "task-delete-btn"]
+    }
+  }
+}
